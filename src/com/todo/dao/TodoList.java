@@ -32,23 +32,35 @@ public class TodoList {
 
 	public void sortByName() {
 		Collections.sort(list, new TodoSortByName());
-
 	}
 
 	public void listAll() {
-		System.out.println("\n"
-				+ "inside list_All method\n");
-		for (TodoItem myitem : list) {
-			System.out.println(myitem.getTitle() + myitem.getDesc());
+		System.out.println("제목순으로 정렬하였습니다.");
+		System.out.println("[전체 목록]");
+		for (TodoItem item : list) {
+			System.out.println("[" + item.getTitle() + "] " + item.getDesc()+" - "+item.getCurrent_date());
 		}
+		System.out.println();
 	}
 	
 	public void reverseList() {
+		System.out.println("제목역순으로 정렬하였습니다.");
 		Collections.reverse(list);
+		System.out.println("[전체 목록]");
+		for (TodoItem item : list) {
+			System.out.println("[" + item.getTitle() + "] " + item.getDesc()+" - "+item.getCurrent_date());
+		}
+		System.out.println();
 	}
 
 	public void sortByDate() {
+		System.out.println("날짜순으로 정렬하였습니다.");
 		Collections.sort(list, new TodoSortByDate());
+		System.out.println("[전체 목록]");
+		for (TodoItem item : list) {
+			System.out.println("[" + item.getTitle() + "] " + item.getDesc()+" - "+item.getCurrent_date());
+		}
+		System.out.println();
 	}
 
 	public int indexOf(TodoItem t) {

@@ -14,12 +14,21 @@ public class TodoMain {
 		TodoList l = new TodoList();
 		boolean isList = false;
 		boolean quit = false;
+		boolean x = true;
+		TodoUtil.loadList(l, "todolist.txt");
 		do {
-			Menu.displaymenu();
+			if(x) {
+				Menu.displaymenu();
+				x = false;
+			}
+			System.out.printf("Command > ");
 			isList = false;
-			String choice = sc.next();
+			String choice = sc.nextLine();
 			switch (choice) {
-
+			case "help":
+				Menu.displaymenu();
+				break;
+			
 			case "add":
 				TodoUtil.createItem(l);
 				break;
@@ -38,18 +47,16 @@ public class TodoMain {
 
 			case "ls_name_asc":
 				l.sortByName();
-				isList = true;
+				l.listAll();
 				break;
 
 			case "ls_name_desc":
 				l.sortByName();
 				l.reverseList();
-				isList = true;
 				break;
 				
 			case "ls_date":
 				l.sortByDate();
-				isList = true;
 				break;
 
 			case "exit":
@@ -57,11 +64,13 @@ public class TodoMain {
 				break;
 
 			default:
-				System.out.println("please enter one of the above mentioned command");
+				System.out.println("정확한 명령어를 입력하세요. (도움말 - help)");
+				System.out.println();
 				break;
 			}
 			
 			if(isList) l.listAll();
 		} while (!quit);
+		TodoUtil.saveList(l, "todolist.txt");
 	}
 }
