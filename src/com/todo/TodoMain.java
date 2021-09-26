@@ -24,6 +24,12 @@ public class TodoMain {
 			System.out.printf("Command > ");
 			isList = false;
 			String choice = sc.nextLine();
+			if(choice.contains("find")) {
+				String[] arr = choice.split(" ");
+				String keyword = arr[1];
+				TodoUtil.find(l, keyword);
+			}else {
+			
 			switch (choice) {
 			case "help":
 				Menu.displaymenu();
@@ -62,13 +68,13 @@ public class TodoMain {
 			case "exit":
 				quit = true;
 				break;
-
+			
 			default:
 				System.out.println("정확한 명령어를 입력하세요. (도움말 - help)");
 				System.out.println();
 				break;
 			}
-			
+			}
 			if(isList) l.listAll();
 		} while (!quit);
 		TodoUtil.saveList(l, "todolist.txt");
