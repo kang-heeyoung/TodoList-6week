@@ -18,7 +18,7 @@ public class TodoUtil {
 		
 		title = sc.nextLine();
 		if (list.isDuplicate(title)) {
-			System.out.printf("중복된 제목입니다. 다른 제목을 입력해주세요.");
+			System.out.printf("제목이 중복됩니다!");
 			System.out.println();
 			return;
 		}
@@ -33,7 +33,8 @@ public class TodoUtil {
 		System.out.println();
 		
 		TodoItem t = new TodoItem(title, desc, category, due_date);
-		list.addItem(t);
+		if(list.addItem(t)>0)
+			System.out.println("추가되었습니다.");
 	}
 
 	public static void deleteItem(TodoList l) {
@@ -46,21 +47,8 @@ public class TodoUtil {
 		
 		String num_s = sc.nextLine();
 		int num = Integer.parseInt(num_s);
-		for (TodoItem item : l.getList()) {
-			if (num==i) {
-				System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
-				System.out.println("위 항목을 삭제하시겠습니까? (y/n) > ");
-				String x = sc.nextLine();
-				if(x.equals("y")) {
-					l.deleteItem(item);
-					System.out.println("삭제되었습니다.\n");
-					break;
-				}else {
-					break;
-				}
-			}
-			i++;
-		}
+		if(l.deleteItem(num)>0)
+			System.out.println("삭제되었습니다.");
 	}
 
 
@@ -89,37 +77,77 @@ public class TodoUtil {
 		System.out.printf("새 카테고리 >");
 		String new_category = sc.nextLine().trim();
 		
-		System.out.printf("새 내용 > ");
+		System.out.printf("새 내용 >  ");
 		String new_description = sc.nextLine().trim();
 		
 		System.out.printf("새 마감일자 > ");
 		String new_due_date = sc.nextLine().trim();
-		for (TodoItem item : l.getList()) {
-			if (num==i) {
-				l.deleteItem(item);
-				TodoItem t = new TodoItem(new_title, new_description, new_category, new_due_date);
-				l.addItem(t);
-				System.out.println("수정되었습니다.");
-				System.out.println();
-				break;
-			}
-			i++;
-		}
+		
+		TodoItem t = new TodoItem(new_title, new_description, new_category, new_due_date);
+		t.setId(num);
+		if(l.editItem(t)>0)
+			System.out.println("수정되었습니다.");
+//		for (TodoItem item : l.getList()) {
+//			if (num==i) {
+//				l.deleteItem(item);
+//				TodoItem t = new TodoItem(new_title, new_description, new_category, new_due_date);
+//				l.addItem(t);
+//				System.out.println("수정되었습니다.");
+//				System.out.println();
+//				break;
+//			}
+//			i++;
+//		}
 	}
-
 	public static void listAll(TodoList l) {
 		System.out.printf("[전체 목록, ");
-		System.out.println("총 "+l.listSize()+"개]");
+		System.out.println("총 "+l.getCount()+"개]");
 		int i = 1;
 		for (TodoItem item : l.getList()) {
-			System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
+			System.out.println(item.toString());
+//			System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
+			i++;
+		}
+		System.out.println();
+	}
+
+	public static void listAll(TodoList l, String orderby, int ordering) {
+		System.out.printf("[전체 목록, ");
+		System.out.println("총 "+l.getCount()+"개]");
+		int i = 1;
+		for (TodoItem item : l.getOrderedList(orderby, ordering)) {
+			System.out.println(item.toString());
+//			System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
 			i++;
 		}
 		System.out.println();
 	}
 	
-	public static void find(TodoList l, String keyword) {
-		l.find(keyword);
+	public static void findList(TodoList l, String keyword) {
+		int count =0;
+		for (TodoItem item : l.getList(keyword)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		System.out.printf("총 %d개의 항목을 찾았습니다.\n", count);
+	}
+	
+	public static void listCateAll(TodoList l) {
+		int count =0;
+		for (String item : l.getCategories()) {
+			System.out.print(item + " ");
+			count++;
+		}
+		System.out.printf("\n총 %d개의 카테고리가 등록되어 있습니다.\n", count);
+	}
+	
+	public static void findCateList(TodoList l, String cate) {
+		int count =0;
+		for (TodoItem item:l.getListCategory(cate)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		System.out.printf("\n총 %d개의 항목을 찾았습니다.\n", count);
 	}
 	
 	public static void saveList(TodoList l, String filename) {
