@@ -10,13 +10,38 @@ public class TodoItem {
     private String category;
     private String due_date;
     private int id;
-   
-    public TodoItem(String title, String desc, String date, String category, String due_date) {
+    private String is_completed;
+    private String percent;
+    private String with;
+    
+    public TodoItem(String title, String desc, String date, String category, String due_date, String is_completed, String percent, String with) {
     	this.title = title;
     	this.desc = desc;
     	this.current_date = date;
     	this.category = category;
     	this.due_date = due_date;
+    	this.is_completed = is_completed;
+    	this.percent = percent;
+    	this.with = with;
+    }
+   
+    public TodoItem(String title, String desc, String date, String category, String due_date, String is_completed) {
+    	this.title = title;
+    	this.desc = desc;
+    	this.current_date = date;
+    	this.category = category;
+    	this.due_date = due_date;
+    	this.is_completed = is_completed;
+    }
+    
+    public TodoItem(String title, String desc, String category, String date, String with) {
+    	this.title = title;
+    	this.desc = desc;
+    	this.due_date = date;
+    	this.category = category;
+    	this.with = with;
+    	SimpleDateFormat transFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    	this.current_date=transFormat.format(new Date());
     }
     
     public TodoItem(String title, String desc, String category, String due_date) {
@@ -26,6 +51,14 @@ public class TodoItem {
     	this.due_date = due_date;
     	SimpleDateFormat transFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         this.current_date=transFormat.format(new Date());
+    }
+    
+    public TodoItem(int id, String percent) {
+    	this.percent = percent;
+    }
+    
+    public TodoItem(String is_completed) {
+    	this.is_completed = is_completed;
     }
     
     public String getCategory() {
@@ -60,6 +93,30 @@ public class TodoItem {
         this.desc = desc;
     }
     
+    public String getIsCompleted() {
+    	return is_completed;
+    }
+    
+    public void setIsCompleted(String isCompleted) {
+    	this.is_completed = isCompleted;
+    }
+    
+    public String getPercent() {
+    	return percent;
+    }
+    
+    public void setPercent(String percent) {
+    	this.percent = percent;
+    }
+
+    public String getWith() {
+    	return with;
+    }
+    
+    public void setWith(String with) {
+    	this.with = with;
+    }
+    
     public int getId() {
         return id;
     }
@@ -81,6 +138,20 @@ public class TodoItem {
     }
     
     public String toString() {
-    	return id+". "+"[" + getCategory() + "] "+getTitle() +" - "+ getDesc()+" - "+getDue_date()+" - "+getCurrent_date();
+    	if(getWith().equals("0")) {
+    		if(((getIsCompleted().toString()).equals("1")) || getPercent().toString().equals("100")) {
+        		return id+". "+"[" + getCategory() + "] "+getTitle() +"[V] - "+ getDesc()+" - "+getDue_date()+" - "+getCurrent_date();
+        	}
+        	else {
+        		return id+". "+"[" + getCategory() + "] "+getTitle() +"["+getPercent()+"%]  - "+ getDesc()+" - "+getDue_date()+" - "+getCurrent_date();
+        	}
+    	}else {
+    		if(((getIsCompleted().toString()).equals("1")) || getPercent().toString().equals("100")) {
+        		return id+". "+"[" + getCategory() + "] "+getTitle() +"[V] - "+ getDesc()+" - "+getWith()+" - "+getDue_date()+" - "+getCurrent_date();
+        	}
+        	else {
+        		return id+". "+"[" + getCategory() + "] "+getTitle() +"["+getPercent()+"%]  - "+ getDesc()+" - "+getWith()+" - "+getDue_date()+" - "+getCurrent_date();
+        	}
+    	}
     }
 }

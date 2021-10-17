@@ -11,7 +11,7 @@ import com.todo.dao.TodoList;
 
 public class TodoUtil {
 	public static void createItem(TodoList list) {
-		String title, desc, category, due_date;
+		String title, desc, category, due_date, with;
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.printf("[항목 추가]\n"+"제목 > ");
@@ -30,11 +30,14 @@ public class TodoUtil {
 		
 		System.out.printf("마감일자 > ");
 		due_date = sc.nextLine();
+		
+		System.out.printf("누구랑(없을 경우 0을 입력해주세요) > ");
+		with = sc.nextLine();
 		System.out.println();
 		
-		TodoItem t = new TodoItem(title, desc, category, due_date);
+		TodoItem t = new TodoItem(title, desc, category, due_date, with);
 		if(list.addItem(t)>0)
-			System.out.println("추가되었습니다.");
+			System.out.println("추가되었습니다.\n");
 	}
 
 	public static void deleteItem(TodoList l) {
@@ -62,7 +65,7 @@ public class TodoUtil {
 		int num = Integer.parseInt(s);
 		for(TodoItem item : l.getList()) {
 			if(num==i) {
-				System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
+				System.out.println(item.toString());
 			}
 			i++;
 		}
@@ -83,22 +86,59 @@ public class TodoUtil {
 		System.out.printf("새 마감일자 > ");
 		String new_due_date = sc.nextLine().trim();
 		
-		TodoItem t = new TodoItem(new_title, new_description, new_category, new_due_date);
+		System.out.printf("새 누구랑 > ");
+		String new_with = sc.nextLine().trim();
+		
+		TodoItem t = new TodoItem(new_title, new_description, new_category, new_due_date, new_with);
 		t.setId(num);
 		if(l.editItem(t)>0)
 			System.out.println("수정되었습니다.");
-//		for (TodoItem item : l.getList()) {
-//			if (num==i) {
-//				l.deleteItem(item);
-//				TodoItem t = new TodoItem(new_title, new_description, new_category, new_due_date);
-//				l.addItem(t);
-//				System.out.println("수정되었습니다.");
-//				System.out.println();
-//				break;
-//			}
-//			i++;
-//		}
 	}
+	
+	public static void comp(TodoList l, int id) {
+		int i=1;
+		for(TodoItem item : l.getList()) {
+			if(id == i) {
+				item.setIsCompleted("1");
+			}
+			i++;
+		}
+		TodoItem t = new TodoItem("1");
+		t.setId(id);
+		if(l.editIsCompleted(t)>0)
+			System.out.println("완료 체크하였습니다.\n");
+	}
+	
+	public static void percent(TodoList l, int id) {
+		Scanner sc = new Scanner(System.in);
+		
+		int i=1;
+		System.out.printf("진행도를 입력해주세요 > ");
+		String percent = sc.nextLine().trim();
+		for(TodoItem item : l.getList()) {
+			if(id == i) {
+				item.setPercent(percent);
+			}
+			i++;
+		}
+		TodoItem t = new TodoItem(id, percent);
+		t.setId(id);
+		if(l.editPercent(t)>0)
+			System.out.println("진행도를 수정했습니다.\n");
+		
+	}
+	
+	public static void compList(TodoList l) {
+		int i= 0;
+		for(TodoItem item : l.getList()) {
+			if((item.getIsCompleted().toString()).equals("1")) {
+				System.out.println(item.toString());
+				i++;
+			}
+		}
+		System.out.println("총 "+i+"개의 항목이 완료되었습니다.\n");
+	}
+	
 	public static void listAll(TodoList l) {
 		System.out.printf("[전체 목록, ");
 		System.out.println("총 "+l.getCount()+"개]");

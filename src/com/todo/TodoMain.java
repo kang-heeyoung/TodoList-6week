@@ -14,7 +14,7 @@ public class TodoMain {
 	public static void start() {
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
-		l.importData("todolist.txt");
+//		l.importData("todolist.txt");
 		
 		boolean isList = false;
 		boolean quit = false;
@@ -92,7 +92,23 @@ public class TodoMain {
 				String cate = sc.nextLine().trim();
 				TodoUtil.findCateList(l, cate);
 				break;
-			
+				
+			case "comp":
+				String n = sc.nextLine().trim();
+				int num = Integer.parseInt(n);
+				TodoUtil.comp(l,num);
+				break;
+				
+			case "ls_comp":
+				TodoUtil.compList(l);
+				break;
+				
+			case "percent":
+				String n1 = sc.nextLine().trim();
+				int num1 = Integer.parseInt(n1);
+				TodoUtil.percent(l, num1);
+				break;
+	
 			default:
 				System.out.println("정확한 명령어를 입력하세요. (도움말 - help)");
 				System.out.println();

@@ -24,8 +24,8 @@ public class TodoList {
 	}
 
 	public int addItem(TodoItem t) {
-		String sql = "insert into list (title, memo, category, current_date, due_date)"
-				+ " values (?,?,?,?,?);";
+		String sql = "insert into list (title, memo, category, current_date, due_date, with)"
+				+ " values (?,?,?,?,?,?);";
 		PreparedStatement pstmt;
 		int count = 0;
 		try {
@@ -35,6 +35,7 @@ public class TodoList {
 			pstmt.setString(3, t.getCategory());
 			pstmt.setString(4, t.getCurrent_date());
 			pstmt.setString(5, t.getDue_date());
+			pstmt.setString(6, t.getWith());
 			count = pstmt.executeUpdate();
 			pstmt.close();
 		} catch(SQLException e) {
@@ -59,10 +60,7 @@ public class TodoList {
 	}
 
 	public int editItem(TodoItem t) {
-//		int index = list.indexOf(t);
-//		list.remove(index);
-//		list.add(updated);
-		String sql = "Update list set title=?, memo=?, category=?, current_date=?, due_date=?"
+		String sql = "Update list set title=?, memo=?, category=?, current_date=?, due_date=?, percent=?, with=?"
 				+ " where id = ?;";
 		PreparedStatement pstmt;
 		int count = 0;
@@ -74,6 +72,42 @@ public class TodoList {
 			pstmt.setString(4, t.getCurrent_date());
 			pstmt.setString(5, t.getDue_date());
 			pstmt.setInt(6, t.getId());
+			pstmt.setString(7, t.getPercent());
+			pstmt.setString(8, t.getWith());
+			count = pstmt.executeUpdate();
+			pstmt.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	} 
+	
+	public int editIsCompleted(TodoItem t) {
+		String sql = "Update list set is_completed=?"
+				+ " where id = ?;";
+		PreparedStatement pstmt;
+		int count = 0;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, t.getIsCompleted());
+			pstmt.setInt(2, t.getId());
+			count = pstmt.executeUpdate();
+			pstmt.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+	
+	public int editPercent(TodoItem t) {
+		String sql = "Update list set percent=?"
+				+ " where id = ?;";
+		PreparedStatement pstmt;
+		int count = 0;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, t.getPercent());
+			pstmt.setInt(2, t.getId());
 			count = pstmt.executeUpdate();
 			pstmt.close();
 		} catch(SQLException e) {
@@ -96,7 +130,10 @@ public class TodoList {
 				String description = rs.getString("memo");
 				String due_date = rs.getString("due_date");
 				String current_date = rs.getString("current_date");
-				TodoItem t = new TodoItem(title, description,category,  due_date);
+				String is_completed = rs.getString("is_completed");
+				String percent = rs.getString("percent");
+				String with = rs.getString("with");
+				TodoItem t = new TodoItem(title, description,current_date, category, due_date, is_completed, percent, with);
 				t.setId(id);
 				t.setCurrent_date(current_date);
 				list.add(t);
@@ -208,24 +245,6 @@ public class TodoList {
 		return list;
 	}
 	
-//	public void find(String keyword) {
-//		int i = 1;
-//		int total = 0;
-//		
-//		for (TodoItem item : list) {
-//			if(item.getTitle().contains(keyword)) {
-//				System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
-//				total ++;
-//			} else if(item.getDesc().contains(keyword)) {
-//				System.out.println(i+". "+"[" + item.getCategory() + "] "+item.getTitle() +" - "+ item.getDesc()+" - "+item.getDue_date()+" - "+item.getCurrent_date());
-//				total++;
-//			}
-//			i++;
-//		}
-//		System.out.println("총 "+total+"개의 항목을 찾았습니다.");
-//		System.out.println();
-//	}
-	
 	public ArrayList<String> getCategories() {
 		ArrayList<String> list = new ArrayList<String>();
 		Statement stmt;
@@ -303,8 +322,8 @@ public class TodoList {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filename));
 			String line;
-			String sql = "insert into list (title, memo, category, current_date, due_date)"
-					+ " values (?,?,?,?,?);";
+			String sql = "insert into list (title, memo, category, current_date, due_date, is_completed, percent, with)"
+					+ " values (?,?,?,?,?,?);";
 			int records = 0;
 			while((line = br.readLine()) !=null) {
 				StringTokenizer st = new StringTokenizer(line, "##");
@@ -313,6 +332,9 @@ public class TodoList {
 				String description = st.nextToken();
 				String due_date = st.nextToken();
 				String current_date = st.nextToken();
+				String is_completed =st.nextToken();
+				String percent =st.nextToken();
+				String with =st.nextToken();
 				
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1,title);
@@ -320,6 +342,9 @@ public class TodoList {
 				pstmt.setString(3,category);
 				pstmt.setString(4,current_date);
 				pstmt.setString(5,due_date);
+				pstmt.setString(6, is_completed);
+				pstmt.setString(7, percent);
+				pstmt.setString(8, with);
 				int count = pstmt.executeUpdate();
 				if (count > 0) records++;
 				pstmt.close();

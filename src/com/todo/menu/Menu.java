@@ -10,9 +10,12 @@ public class Menu {
         System.out.println("edit - 항목 수정");
         System.out.println("ls - 전체 목록");
         System.out.println("find - 찾기");
-        System.out.println("ls_name_asc - 제목순 정렬");
+        System.out.println("ls_name - 제목순 정렬");
         System.out.println("ls_name_desc - 제목역순 정렬");
         System.out.println("ls_date - 날짜순 정렬");
+        System.out.println("comp - 완료");
+        System.out.println("ls_comp - 완료 내역 출력");
+        System.out.println("percent - 진행도 수정");
         System.out.println("exit - 종료");
         System.out.println();
     }
